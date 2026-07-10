@@ -89,6 +89,19 @@ export default function Home() {
     });
   }, [totalSections]);
 
+  const goToSection = useCallback((idx: number) => {
+    if (isTransitioningRef.current) return;
+
+    isTransitioningRef.current = true;
+    setIsTransitioning(true);
+    setCurrentProject(idx);
+
+    setTimeout(() => {
+      isTransitioningRef.current = false;
+      setIsTransitioning(false);
+    }, 800);
+  }, []);
+
   // Reset animation key to trigger re-animation on section change
   const animationKey = currentProject;
 
@@ -162,7 +175,7 @@ export default function Home() {
 
   const renderSection = () => {
     if (currentProject === 0) {
-      return <HeroSection />;
+      return <HeroSection onViewWork={() => goToSection(1)} />;
     } else if (currentProject === totalSections - 1) {
       return <FooterSection />;
     } else {
@@ -249,17 +262,7 @@ export default function Home() {
         {Array.from({ length: totalSections }).map((_, idx) => (
           <button
             key={idx}
-            onClick={() => {
-              if (!isTransitioningRef.current) {
-                setCurrentProject(idx);
-                isTransitioningRef.current = true;
-                setIsTransitioning(true);
-                setTimeout(() => {
-                  isTransitioningRef.current = false;
-                  setIsTransitioning(false);
-                }, 800);
-              }
-            }}
+            onClick={() => goToSection(idx)}
             className={`transition-all duration-300 ${idx === currentProject
               ? 'bg-foreground border-foreground scale-125'
               : 'bg-transparent border-foreground hover:scale-110'
@@ -292,7 +295,7 @@ export default function Home() {
   );
 }
 
-function HeroSection() {
+function HeroSection({ onViewWork }: { onViewWork?: () => void }) {
   return (
     <section className="snap-section px-4 md:px-8 lg:px-16 w-full h-screen flex items-center justify-center overflow-hidden">
       <div className="max-w-6xl mx-auto w-full">
@@ -320,9 +323,13 @@ function HeroSection() {
 
         {/* CTA */}
         <div className="flex gap-4 md:gap-6 items-center">
-          <div className="border-foreground px-6 md:px-8 py-3 md:py-4 text-sm md:text-base font-mono font-semibold hover:bg-foreground hover:text-background transition-all duration-200 active:scale-95" style={{ borderWidth: '2px', borderStyle: 'solid' }}>
+          <button
+            onClick={onViewWork}
+            className="border-foreground px-6 md:px-8 py-3 md:py-4 text-sm md:text-base font-mono font-semibold hover:bg-foreground hover:text-background transition-all duration-200 active:scale-95"
+            style={{ borderWidth: '2px', borderStyle: 'solid' }}
+          >
             VIEW WORK
-          </div>
+          </button>
           <div className="text-xs md:text-sm font-mono text-muted-foreground">
             {projects.length} PROJECTS
           </div>
@@ -348,7 +355,7 @@ function ProjectSection({
 
   return (
     <section className="snap-section px-4 md:px-8 lg:px-16 w-full h-screen flex items-center justify-center overflow-hidden">
-      <div className="max-w-7xl mx-auto w-full grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-12 items-start md:items-center max-h-screen overflow-y-auto">
+      <div className="max-w-7xl mx-auto w-full grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-12 items-start md:items-center">
         {/* Image and Video */}
         <div className="order-2 md:order-1 w-full md:col-span-7 flex flex-row gap-2 md:gap-4 items-center">
           {project.images && project.images.length > 0 ? (
@@ -411,7 +418,7 @@ function ProjectSection({
         </div>
 
         {/* Content */}
-        <div className="order-1 md:order-2 md:col-span-5 max-h-screen overflow-y-auto pr-4">
+        <div className="order-1 md:order-2 md:col-span-5">
           <div className="mb-6 md:mb-8">
             <h2 className="font-bold text-foreground mb-4 text-lg md:text-2xl">{project.title}</h2>
             <div className="w-16 h-1 bg-foreground mb-6" />
