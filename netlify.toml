@@ -2,6 +2,9 @@
   command = "vite build"
   publish = "dist/public"
 
+[build.environment]
+  NODE_VERSION = "22.12"
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
