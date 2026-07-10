@@ -44,8 +44,8 @@ const projects: Project[] = [
   },
   {
     id: 4,
-    title: 'Project Four',
-    description: 'A groundbreaking project that pushes the boundaries of modern web design and functionality. Built with precision and attention to detail.',
+    title: 'CHITOSE - Food Delivery app (2019-2021) (Outdated)',
+    description: 'Founded and built a local food delivery marketplace, connecting restaurants and customers through a digital ordering platform. Led the product journey from idea to operation, combining technology, user experience, and real-world business execution.',
     video: '/project4.mov',
     tags: ['Mobile App', 'Real-time Orders', 'Database'],
     link: '#',
